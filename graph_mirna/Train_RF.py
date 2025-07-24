@@ -1,3 +1,11 @@
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+import os
+from joblib import dump
+import tempfile
+from prin_task_api_utils import TaskIOManager 
+
+
 def train_model_and_save(
     df_train,
     df_prod_train,
@@ -6,10 +14,7 @@ def train_model_and_save(
     model_output_path="../data/models",
     save_path="../data/processed"
 ):
-    from sklearn.ensemble import RandomForestClassifier
-    import pandas as pd
-    import os
-    from joblib import dump
+
 
     # === Preprocessing: costruzione viste ===
     df_expr_train = df_train.drop(columns=['country', 'disease', 'age', 'sex', 'apoe4'], errors='ignore')
@@ -38,15 +43,15 @@ def train_model_and_save(
     rfc.fit(X_train, y_train)
 
     # === Calcolo e salvataggio della feature importance ===
-    importances = rfc.feature_importances_
-    feature_importance_df = pd.DataFrame({
-        'Feature': X_train.columns,
-        'Importance': importances
-    })
-    feature_importance_df['Normalized_Importance'] = (
-        feature_importance_df['Importance'] / feature_importance_df['Importance'].sum()
-    )
-    feature_importance_df = feature_importance_df.sort_values(by='Normalized_Importance', ascending=False)
+    # importances = rfc.feature_importances_
+    # feature_importance_df = pd.DataFrame({
+    #    'Feature': X_train.columns,
+    #    'Importance': importances
+    #})
+    #feature_importance_df['Normalized_Importance'] = (
+    #    feature_importance_df['Importance'] / feature_importance_df['Importance'].sum()
+    #)
+    #feature_importance_df = feature_importance_df.sort_values(by='Normalized_Importance', ascending=False)
 
     # === Preparazione nomi file univoci ===
     view_name = "_".join(selected_views_train)
@@ -61,6 +66,9 @@ def train_model_and_save(
     # === Salvataggi ===
     dump(rfc, os.path.join(model_output_path, model_filename))
     dump(X_train.columns.tolist(), os.path.join(model_output_path, features_filename))
-    feature_importance_df.to_csv(os.path.join(save_path, importance_filename), index=False)
+    # feature_importance_df.to_csv(os.path.join(save_path, importance_filename), index=False)
+    
+    
+    
 
     print(f"Model, features, and feature importance saved for views: {selected_views_train}, fold: {fold_number}")

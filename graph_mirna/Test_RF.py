@@ -135,7 +135,9 @@ def load_model_and_predict(
             "predicted_class": predicted_class,
             "probability": predicted_probability
         })
+        
     results_json = json.dumps(results, indent=2)
+    
     with open("results.json", "w") as f:
         f.write(results_json)
 

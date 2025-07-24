@@ -6,7 +6,9 @@ from P_value_matrix_neg import normalize_p_value
 from Graph_Conv import execute_graph_conv
 from Scalar_Product import  scalar_product
 from Train_RF import train_model_and_save
-
+import os
+from prin_task_api_utils import TaskIOManager 
+import zipfile
 
 import torch
 
@@ -53,13 +55,13 @@ prod_train=pd.read_csv(f"{processor.processed_data_path}/subj_embeddings_train.c
 
 
 view_combinations = [
-    (['expr'], ['expr_test']),
-    (['expr', 'meta'], ['expr_test', 'meta_test']),
+    #(['expr'], ['expr_test']),
+    #(['expr', 'meta'],['expr_test', 'meta_test']),
     (['prod', 'meta'], ['prod_test', 'meta_test']),
-    (['expr', 'prod'], ['expr_test', 'prod_test']),
-    (['prod'], ['prod_test']),
-    (['expr', 'prod', 'meta'], ['expr_test', 'prod_test', 'meta_test']),
-    (['meta'], ['meta_test'])
+    #(['expr', 'prod'], ['expr_test', 'prod_test']),
+    #(['prod'], ['prod_test']),
+    #(['expr', 'prod', 'meta'], ['expr_test', 'prod_test', 'meta_test']),
+    #(['meta'], ['meta_test'])
 ]
 
 # Qui stai preparando i risultati aggregati per ogni combinazione di viste
@@ -76,3 +78,22 @@ for selected_views_train, selected_views_test in view_combinations:
         save_path=processor.processed_data_path
     )
 
+TRINO_USER = os.getenv('TRINO_USER')
+TRINO_GROUP = os.getenv('TRINO_GROUP')
+TRINO_ENDPOINT = os.getenv('TRINO_ENDPOINT')
+TRINO_CATALOG = os.getenv('TRINO_CATALOG')
+TRINO_SCHEMA = os.getenv('TRINO_SCHEMA')
+TASK_SCOPE = os.getenv('TASK_SCOPE')
+TASK_APIS_BASE_URL = os.getenv('TASK_APIS_BASE_URL') or ""
+
+taskIOManager = TaskIOManager(task_api_base_url=TASK_APIS_BASE_URL)
+
+# Create a zip file with `the file saved in the previous steps
+with zipfile.ZipFile('model_files.zip', 'w') as zipf:
+    zipf.write('../data/models/rf_model_prod_meta_final.joblib')
+    zipf.write('../data/models/rf_features_prod_meta_final.joblib')
+    zipf.write('../data/processed/graph_embeddings.csv')
+
+
+with open('model_files.zip', 'r') as model_file:
+        taskIOManager.save_model(model_file=model_file, user_group=TRINO_GROUP)

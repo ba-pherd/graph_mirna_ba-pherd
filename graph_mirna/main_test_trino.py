@@ -5,6 +5,9 @@ from Test_RF import load_model_and_predict
 from dataset import MiRNADataProcessor
 from Scalar_Product import scalar_product
 from dotenv import load_dotenv
+from prin_task_api_utils import TaskIOManager 
+import zipfile
+
 
 
 def main(
@@ -13,6 +16,25 @@ def main(
     model_output_path="../data/models",
     views_to_test=None
 ):
+    
+    TRINO_USER = os.getenv('TRINO_USER')
+    TRINO_GROUP = os.getenv('TRINO_GROUP')
+    TRINO_ENDPOINT = os.getenv('TRINO_ENDPOINT')
+    TRINO_CATALOG = os.getenv('TRINO_CATALOG')
+    TRINO_SCHEMA = os.getenv('TRINO_SCHEMA')
+    TASK_SCOPE = os.getenv('TASK_SCOPE')
+    TASK_APIS_BASE_URL = os.getenv('TASK_APIS_BASE_URL') or ""
+
+    taskIOManager = TaskIOManager(task_api_base_url=TASK_APIS_BASE_URL)
+    
+    with taskIOManager.get_model(user_group=TRINO_GROUP) as model_file:
+        with zipfile.ZipFile(model_file) as zipf:
+            zipf.extract('rf_model_prod_meta_final.joblib', '../data/models/')
+            zipf.extract('rf_features_prod_meta_final.joblib', '../data/models/')
+            zipf.extract('graph_embeddings.csv', '../data/processed/')     
+    
+    
+    
 
     processor = MiRNADataProcessor(
         raw_data_path="../data/raw",
@@ -27,10 +49,7 @@ def main(
     node_embeddings = pd.read_csv(graph_conv_output_path, index_col=0)
 
     # === Caricamento dei dati di test da trino ===
-    TRINO_USER = os.getenv('TRINO_USER')
-    TRINO_ENDPOINT = os.getenv('TRINO_ENDPOINT')
-    TRINO_CATALOG = os.getenv('TRINO_CATALOG')
-    TRINO_SCHEMA = os.getenv('TRINO_SCHEMA')
+    
 
     engine = create_engine(f'trino://{TRINO_USER}@{TRINO_ENDPOINT}/{TRINO_CATALOG}/{TRINO_SCHEMA}')
     connection = engine.connect()
@@ -60,13 +79,13 @@ def main(
     # === Se non specificato, usa le viste predefinite ===
     if views_to_test is None:
         views_to_test = [
-            (['expr_test'], "expr"),
-            (['expr_test', 'meta_test'], "expr_meta"),
+            #(['expr_test'], "expr"),
+            #(['expr_test', 'meta_test'], "expr_meta"),
             (['prod_test', 'meta_test'], "prod_meta"),
-            (['expr_test', 'prod_test'], "expr_prod"),
-            (['prod_test'], "prod"),
-            (['expr_test', 'prod_test', 'meta_test'], "expr_prod_meta"),
-            (['meta_test'], "meta")
+            #(['expr_test', 'prod_test'], "expr_prod"),
+            #(['prod_test'], "prod"),
+            #(['expr_test', 'prod_test', 'meta_test'], "expr_prod_meta"),
+            #(['meta_test'], "meta")
         ]
 
     # === Test modelli salvati ===
@@ -80,16 +99,22 @@ def main(
                 model_output_path=model_output_path,
                 view_name=view_name
             )
+            
+            save_result_response = taskIOManager.save_results(results={
+                "result.json": ("result.json", results_json)
+            },
+            user_group=TRINO_GROUP,
+            task_scope=TASK_SCOPE)
+            
         except Exception as e:
             print(f" Failed to evaluate model for view {view_name}: {e}")
+            
+        
 
 
 if __name__ == "__main__":
-    # Load environmental variables
-    load_dotenv()
-
     custom_views = [
-        (['expr_test', 'prod_test'], "expr_prod"),
+        (['prod_test', 'meta_test'], "prod_meta"),
     ]
 
     main(
@@ -98,3 +123,5 @@ if __name__ == "__main__":
         model_output_path="../data/models",
         views_to_test=custom_views
     )
+    
+        
