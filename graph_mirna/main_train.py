@@ -14,8 +14,8 @@ import torch
 
 
 processor = MiRNADataProcessor(
-    raw_data_path="../data/raw",
-    processed_data_path="../data/processed"
+    raw_data_path="./data/raw",
+    processed_data_path="./data/processed"
 )
 
 processor.load_data()
@@ -74,7 +74,7 @@ for selected_views_train, selected_views_test in view_combinations:
         df_prod_train=prod_train,
         selected_views_train=selected_views_train,
         fold_number="final",  # Adatta questo se stai usando fold separati
-        model_output_path="../data/models",
+        model_output_path="./data/models",
         save_path=processor.processed_data_path
     )
 
@@ -90,9 +90,9 @@ taskIOManager = TaskIOManager(task_api_base_url=TASK_APIS_BASE_URL)
 
 # Create a zip file with `the file saved in the previous steps
 with zipfile.ZipFile('model_files.zip', 'w') as zipf:
-    zipf.write('../data/models/rf_model_prod_meta_final.joblib')
-    zipf.write('../data/models/rf_features_prod_meta_final.joblib')
-    zipf.write('../data/processed/graph_embeddings.csv')
+    zipf.write('./data/models/rf_model_prod_meta_final.joblib')
+    zipf.write('./data/models/rf_features_prod_meta_final.joblib')
+    zipf.write('./data/processed/graph_embeddings.csv')
 
 
 with open('model_files.zip', 'r') as model_file:

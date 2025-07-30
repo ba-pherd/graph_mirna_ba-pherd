@@ -12,7 +12,7 @@ def execute_rna_bert():
 
     state_dict = torch.load('RNABERT/bert_mul_2.pth', map_location='cpu')
     model.load_state_dict(OrderedDict((key[7:], value) for key, value in state_dict.items()))
-    mirna_df = pd.read_csv('../data/raw/miRNA_seq_tot', index_col=0)
+    mirna_df = pd.read_csv('./data/raw/miRNA_seq_tot', index_col=0)
     nan_indices = mirna_df.index.isna()
 
     #mirna_df.loc[nan_indices, 'ID'] = range(1, nan_indices.sum() + 1)
@@ -37,5 +37,5 @@ def execute_rna_bert():
             print(f"Character '{e.args[0]}' in sequence '{sequence}' is not in the mapping dictionary")
 
     # Salva gli embedding in un file
-    torch.save(mirna, '../data/processed/miRNA.pt')
+    torch.save(mirna, './data/processed/miRNA.pt')
 execute_rna_bert()

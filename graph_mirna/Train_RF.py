@@ -11,8 +11,8 @@ def train_model_and_save(
     df_prod_train,
     selected_views_train,
     fold_number="default",
-    model_output_path="../data/models",
-    save_path="../data/processed"
+    model_output_path="./data/models",
+    save_path="./data/processed"
 ):
 
 

@@ -13,7 +13,7 @@ import zipfile
 def main(
     df_test_path,
     fold_number="final",
-    model_output_path="../data/models",
+    model_output_path="./data/models",
     views_to_test=None
 ):
     
@@ -29,21 +29,21 @@ def main(
     
     with taskIOManager.get_model(user_group=TRINO_GROUP) as model_file:
         with zipfile.ZipFile(model_file) as zipf:
-            zipf.extract('rf_model_prod_meta_final.joblib', '../data/models/')
-            zipf.extract('rf_features_prod_meta_final.joblib', '../data/models/')
-            zipf.extract('graph_embeddings.csv', '../data/processed/')     
+            zipf.extract('rf_model_prod_meta_final.joblib', './data/models/')
+            zipf.extract('rf_features_prod_meta_final.joblib', './data/models/')
+            zipf.extract('graph_embeddings.csv', './data/processed/')     
     
     
     
 
     processor = MiRNADataProcessor(
-        raw_data_path="../data/raw",
-        processed_data_path="../data/processed"
+        raw_data_path="./data/raw",
+        processed_data_path="./data/processed"
     )
     # === Caricamento dati di train ===
     processed_path = processor.processed_data_path
     df_train=pd.read_csv(f"{processor.processed_data_path}/df_concat_final.csv", index_col=0)
-    complexive_df_path = "../data/processedcomplexive_embeddings_default.csv"
+    complexive_df_path = "./data/processedcomplexive_embeddings_default.csv"
     complexive_df = pd.read_csv(complexive_df_path, index_col=0)
     graph_conv_output_path = f"{processor.processed_data_path}/graph_embeddings.csv"
     node_embeddings = pd.read_csv(graph_conv_output_path, index_col=0)
@@ -72,7 +72,7 @@ def main(
         df_test = pd.concat([df_test, new_data], axis=1)
 
 
-    prod_test_path='../data/processed/prod_test.csv'
+    prod_test_path='./data/processed/prod_test.csv'
     scalar_product(df_test, node_embeddings, complexive_df, prod_test_path)
     prod_test = pd.read_csv(prod_test_path, index_col=0)
 
@@ -118,9 +118,9 @@ if __name__ == "__main__":
     ]
 
     main(
-        df_test_path='../data/processed/df_89_tot.csv',
+        df_test_path='./data/processed/df_89_tot.csv',
         fold_number="final",
-        model_output_path="../data/models",
+        model_output_path="./data/models",
         views_to_test=custom_views
     )
     

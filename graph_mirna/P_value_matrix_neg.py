@@ -5,7 +5,7 @@ import torch
 import pickle
 
 
-def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="../data/processed/"):
+def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="./data/processed/"):
     def normalize_embeddings(embeddings_tensor):
         """
         Normalizza gli embedding tra 0 e 1.
@@ -23,12 +23,12 @@ def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="../dat
 
     # Salva la mappatura dei nodi
     mapping_nodes = {k: v for k, v in enumerate(p_value_matrix.columns)}
-    with open("../data/processed/mapping_miRNA", 'wb') as file:
+    with open("./data/processed/mapping_miRNA", 'wb') as file:
         pickle.dump(mapping_nodes, file)
     print("Contenuto di mapping_nodes:", mapping_nodes)
 
     # Carica gli embedding e normalizzali
-    embeddings = torch.load('../data/processed/miRNA.pt',weights_only=False)
+    embeddings = torch.load('./data/processed/miRNA.pt',weights_only=False)
     embeddings = pd.DataFrame.from_dict(embeddings, orient='index')
     # Filtra gli embedding per includere solo i nodi presenti in p_value_matrix.columns
     embeddings = embeddings.loc[p_value_matrix.columns]
