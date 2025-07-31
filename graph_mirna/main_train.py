@@ -96,5 +96,5 @@ def execute_training():
         zipf.write('data/processed/graph_embeddings.csv')
 
 
-    with open('model_files.zip', 'r') as model_file:
+    with open('model_files.zip', 'rb') as model_file:
             taskIOManager.save_model(model_file=model_file, user_group=TRINO_GROUP)
