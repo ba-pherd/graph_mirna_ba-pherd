@@ -151,7 +151,7 @@ def show_base_PCA(features, targets, substructure):
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0, fontsize=18)
     plt.subplots_adjust(right=0.7)
     plt.show()
-    plt.savefig("../png/{}_result_{}_base.png".format(x, int(time.time())), dpi=300)
+    plt.savefig("./png/{}_result_{}_base.png".format(x, int(time.time())), dpi=300)
     plt.close()
     
     # substructure = SS.tolist()
@@ -165,7 +165,7 @@ def show_base_PCA(features, targets, substructure):
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0, fontsize=6)
     plt.subplots_adjust(right=0.7)
     plt.show()
-    plt.savefig("../png/{}_result_{}_ss_ALL.png".format(x, int(time.time())), dpi=300)
+    plt.savefig("./png/{}_result_{}_ss_ALL.png".format(x, int(time.time())), dpi=300)
     plt.close()
 
     for label1 in np.unique(targets)[1:]:
@@ -179,7 +179,7 @@ def show_base_PCA(features, targets, substructure):
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0, fontsize=6)
         plt.subplots_adjust(right=0.7)
         plt.show()
-        plt.savefig("../png/{}_result_{}_ss_{}.png".format(x, int(time.time()), basedict[label1]), dpi=300)
+        plt.savefig("./png/{}_result_{}_ss_{}.png".format(x, int(time.time()), basedict[label1]), dpi=300)
         plt.close()
 
 
