@@ -25,7 +25,7 @@ def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="data/p
     mapping_nodes = {k: v for k, v in enumerate(p_value_matrix.columns)}
     with open("data/processed/mapping_miRNA", 'wb') as file:
         pickle.dump(mapping_nodes, file)
-    print("Contenuto di mapping_nodes:", mapping_nodes)
+    #print("Contenuto di mapping_nodes:", mapping_nodes)
 
     # Carica gli embedding e normalizzali
     embeddings = torch.load('data/processed/miRNA.pt',weights_only=False)
@@ -34,8 +34,8 @@ def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="data/p
     embeddings = embeddings.loc[p_value_matrix.columns]
     embeddings_tensor = torch.tensor(embeddings.values, dtype=torch.float)
 
-    print("p_value_matrix.columns:", p_value_matrix.columns.tolist())
-    print("embeddings.index:", embeddings.index.tolist())
+    #print("p_value_matrix.columns:", p_value_matrix.columns.tolist())
+    #print("embeddings.index:", embeddings.index.tolist())
 
 
 

@@ -25,6 +25,7 @@ set_seed(42)
 
 def execute_graph_conv(df, complexive_embeddings, output, patience=10):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print("device : f{device}")
 
     class GCNModel(nn.Module):
         def __init__(self, in_channels, hidden_channels, out_channels):
