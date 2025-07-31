@@ -11,8 +11,8 @@ def load_model_and_evaluate(
     df_prod_test,
     selected_views_test,
     fold_number="default",
-    model_output_path="../data/models",
-    save_path="../data/processed",
+    model_output_path="data/models",
+    save_path="data/processed",
     view_name=None  # <--- nuovo parametro
 ):
 
@@ -85,8 +85,8 @@ def load_model_and_predict(
     df_prod_test,
     selected_views_test,
     fold_number="default",
-    model_output_path="../data/models",
-    save_path="../data/processed",
+    model_output_path="data/models",
+    save_path="data/processed",
     view_name=None  # <--- nuovo parametro
 ):
     # === Preprocessing ===

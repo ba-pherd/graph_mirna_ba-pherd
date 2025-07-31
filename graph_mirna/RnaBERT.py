@@ -1,18 +1,18 @@
 import pandas as pd
 import torch
 from collections import OrderedDict
-from RNABERT.bert import get_config, BertModel, BertForMaskedLM
+from graph_mirna.RNABERT.bert import get_config, BertModel, BertForMaskedLM
 
 def execute_rna_bert():
-    config = get_config('RNABERT/RNA_bert_config.json')
+    config = get_config('graph_mirna/RNABERT/RNA_bert_config.json')
     config.hidden_size = config.num_attention_heads * config.multiple
 
     model = BertModel(config)
     model = BertForMaskedLM(config, model).eval()
 
-    state_dict = torch.load('RNABERT/bert_mul_2.pth', map_location='cpu')
+    state_dict = torch.load('graph_mirna/RNABERT/bert_mul_2.pth', map_location='cpu')
     model.load_state_dict(OrderedDict((key[7:], value) for key, value in state_dict.items()))
-    mirna_df = pd.read_csv('../data/raw/miRNA_seq_tot', index_col=0)
+    mirna_df = pd.read_csv('data/raw/miRNA_seq_tot', index_col=0)
     nan_indices = mirna_df.index.isna()
 
     #mirna_df.loc[nan_indices, 'ID'] = range(1, nan_indices.sum() + 1)
@@ -37,5 +37,5 @@ def execute_rna_bert():
             print(f"Character '{e.args[0]}' in sequence '{sequence}' is not in the mapping dictionary")
 
     # Salva gli embedding in un file
-    torch.save(mirna, '../data/processed/miRNA.pt')
+    torch.save(mirna, 'data/processed/miRNA.pt')
 execute_rna_bert()

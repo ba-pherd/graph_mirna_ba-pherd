@@ -6,7 +6,7 @@ from sklearn.model_selection import StratifiedKFold
 
 
 class MiRNADataProcessor:
-    def __init__(self, raw_data_path="../data/raw", processed_data_path="../data/processed"):
+    def __init__(self, raw_data_path="data/raw", processed_data_path="data/processed"):
         self.raw_data_path = raw_data_path
         self.processed_data_path = processed_data_path
         self.df_concat = None  # Variabile per il dataset unificato
@@ -84,8 +84,8 @@ if __name__ == "__main__":
     import pandas as pd  # Assicurati di importare pandas
 
     processor = MiRNADataProcessor(
-        raw_data_path="../data/raw",
-        processed_data_path="../data/processed"
+        raw_data_path="data/raw",
+        processed_data_path="data/processed"
     )
 
     processor.load_data()

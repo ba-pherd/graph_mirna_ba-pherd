@@ -10,4 +10,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . /app
 
-CMD ["python", "graph_mirna/main_test.py"]
+CMD ["python", "entry_point.py"]
