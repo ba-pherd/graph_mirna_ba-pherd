@@ -95,9 +95,9 @@ def normalize_p_value(p_value_matrix, output1,file_suffix="default",path="data/p
 
     # Creazione e salvataggio embedding dei nodi artificiali
     artificial_embeddings = pd.DataFrame.from_dict(artificial_nodes, orient='index')
-    artificial_embeddings.to_csv(f"{path}artificial_embeddings_{file_suffix}.csv")
+    artificial_embeddings.to_csv(f"{path}/artificial_embeddings_{file_suffix}.csv")
     complexive_embedding = pd.concat([embeddings_normalized, artificial_embeddings])
-    complexive_embedding.to_csv(f"{path}complexive_embeddings_{file_suffix}.csv")
+    complexive_embedding.to_csv(f"{path}/complexive_embeddings_{file_suffix}.csv")
     print(artificial_embeddings.shape)
     return complexive_embedding
 

@@ -7,7 +7,7 @@ from prin_task_api_utils import TaskIOManager
 import os
 import zipfile
 import pandas as pd
-
+import joblib
 
 
 def main(
@@ -30,10 +30,19 @@ def main(
     with taskIOManager.get_model(user_group=TRINO_GROUP) as model_file:
         with zipfile.ZipFile(model_file) as zipf:
             zipf.extract('data/models/rf_model_prod_meta_final.joblib')
-            zipf.extract('data/models/rf_features_prod_meta_final.joblib')
-            zipf.extract('data/processed/graph_embeddings.csv')     
+            zipf.extract('data/models/train_columns.txt')
+            zipf.extract('data/processed/graph_embeddings.csv')       
+            zipf.extract('data/processed/complexive_embeddings_default.csv')  
+               
+    #with open('model_files.zip', 'rb') as model_file:
+    #    with zipfile.ZipFile(model_file) as zipf:
+    #        zipf.extract('data/models/rf_model_prod_meta_final.joblib')
+    #        zipf.extract('data/models/train_columns.txt')
+    #        zipf.extract('data/processed/graph_embeddings.csv')       
+    #        zipf.extract('data/processed/complexive_embeddings_default.csv')  
     
-    
+    with open('data/models/train_columns.txt', 'r') as f:
+        train_columns = f.read().splitlines() 
     
 
     processor = MiRNADataProcessor(
@@ -41,9 +50,7 @@ def main(
         processed_data_path="data/processed"
     )
     # === Caricamento dati di train ===
-    processed_path = processor.processed_data_path
-    df_train=pd.read_csv(f"{processor.processed_data_path}/df_concat_final.csv", index_col=0)
-    complexive_df_path = "data/processedcomplexive_embeddings_default.csv"
+    complexive_df_path = "data/processed/complexive_embeddings_default.csv"
     complexive_df = pd.read_csv(complexive_df_path, index_col=0)
     graph_conv_output_path = f"{processor.processed_data_path}/graph_embeddings.csv"
     node_embeddings = pd.read_csv(graph_conv_output_path, index_col=0)
@@ -62,9 +69,9 @@ def main(
     # rename "mir" with "miR" in column names
     df_test.columns = df_test.columns.str.replace('hsa-mir-', 'hsa-miR-', regex=False)
     # find and keep features originally present in the train dataset
-    df_test = df_test[df_test.columns.intersection(df_train.columns)]
+    df_test = df_test[df_test.columns.intersection(train_columns)]
     # find the features which are not present in the test set
-    missing_columns = list(set(df_train.columns) - set(df_test.columns))
+    missing_columns = list(set(train_columns) - set(df_test.columns))
 
     # add the missing columns to the test set
     if missing_columns:

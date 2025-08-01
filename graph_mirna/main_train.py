@@ -26,6 +26,12 @@ def execute_training():
     execute_rna_bert()
 
     train_df = pd.read_csv(f"{processor.processed_data_path}/df_concat_final.csv", index_col=0)
+    
+    # save the train columns for later use
+    train_columns = train_df.columns.tolist()
+    with open('data/models/train_columns.txt', 'w') as f:
+        for col in train_columns:
+            f.write(f"{col}\n")
 
     # Carica la matrice di correlazione filtrata e crea il grafo
     correlation_output_path = f"{processor.processed_data_path}/correlation_matrix_train.csv"
@@ -92,8 +98,9 @@ def execute_training():
     # Create a zip file with `the file saved in the previous steps
     with zipfile.ZipFile('model_files.zip', 'w') as zipf:
         zipf.write('data/models/rf_model_prod_meta_final.joblib')
-        zipf.write('data/models/rf_features_prod_meta_final.joblib')
+        zipf.write('data/models/train_columns.txt')
         zipf.write('data/processed/graph_embeddings.csv')
+        zipf.write('data/processed/complexive_embeddings_default.csv')
 
 
     with open('model_files.zip', 'rb') as model_file:
