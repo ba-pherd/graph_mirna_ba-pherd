@@ -29,9 +29,9 @@ def main(
     
     with taskIOManager.get_model(user_group=TRINO_GROUP) as model_file:
         with zipfile.ZipFile(model_file) as zipf:
-            zipf.extract('rf_model_prod_meta_final.joblib', 'data/models/')
-            zipf.extract('rf_features_prod_meta_final.joblib', 'data/models/')
-            zipf.extract('graph_embeddings.csv', 'data/processed/')     
+            zipf.extract('data/models/rf_model_prod_meta_final.joblib', 'data/models/')
+            zipf.extract('data/models/rf_features_prod_meta_final.joblib', 'data/models/')
+            zipf.extract('data/processed/graph_embeddings.csv', 'data/processed/')     
     
     
     
