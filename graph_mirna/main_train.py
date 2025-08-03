@@ -29,6 +29,8 @@ def execute_training():
     
     # save the train columns for later use
     train_columns = train_df.columns.tolist()
+    
+    os.makedirs("data/models", exist_ok=True)
     with open('data/models/train_columns.txt', 'w') as f:
         for col in train_columns:
             f.write(f"{col}\n")
