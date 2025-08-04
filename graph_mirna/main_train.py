@@ -100,10 +100,10 @@ def execute_training():
     # Create a zip file with `the file saved in the previous steps
     with zipfile.ZipFile('model_files.zip', 'w') as zipf:
         zipf.write('data/models/rf_model_prod_meta_final.joblib')
+        zipf.write('data/models/rf_features_prod_meta_final.joblib')
         zipf.write('data/models/train_columns.txt')
         zipf.write('data/processed/graph_embeddings.csv')
         zipf.write('data/processed/complexive_embeddings_default.csv')
-
 
     with open('model_files.zip', 'rb') as model_file:
             taskIOManager.save_model(model_file=model_file, user_group=TRINO_GROUP)

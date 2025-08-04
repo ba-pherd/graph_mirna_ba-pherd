@@ -30,9 +30,11 @@ def main(
     with taskIOManager.get_model(user_group=TRINO_GROUP) as model_file:
         with zipfile.ZipFile(model_file) as zipf:
             zipf.extract('data/models/rf_model_prod_meta_final.joblib')
+            zipf.extract('data/models/rf_features_prod_meta_final.joblib')  
             zipf.extract('data/models/train_columns.txt')
             zipf.extract('data/processed/graph_embeddings.csv')       
-            zipf.extract('data/processed/complexive_embeddings_default.csv')  
+            zipf.extract('data/processed/complexive_embeddings_default.csv')
+
                
     #with open('model_files.zip', 'rb') as model_file:
     #    with zipfile.ZipFile(model_file) as zipf:
